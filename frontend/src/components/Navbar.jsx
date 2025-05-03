@@ -12,10 +12,10 @@ const Navbar = ({ isLoggedIn, user, handleLogout }) => {
           <Link to="/">Quick Commerce</Link>
         </div>
 
-        <div className="navbar-search">
+        {/* <div className="navbar-search">
           <input type="text" placeholder="Search for products..." />
           <button>Search</button>
-        </div>
+        </div> */}
 
         <div className="navbar-links">
         <button onClick={toggleDarkMode} className="theme-toggle">

@@ -10,6 +10,18 @@
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   }
+
+  .product-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .review-count {
+    font-size: 0.9rem;
+    color: #666;
+  }
   
   .product-image {
     width: 100%;

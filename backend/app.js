@@ -230,10 +230,15 @@ app.get('/api/categories', async (req, res) => {
 app.get('/api/products/category/:categoryId', async (req, res) => {
   try {
     const categoryId = req.params.categoryId;
-    const products = await pool.query(
-      'SELECT * FROM products WHERE category_id = $1',
-      [categoryId]
-    );
+    const products = await pool.query(`
+      SELECT p.*, 
+        COALESCE(ROUND(AVG(r.rating), 1), 0) as average_rating,
+        COUNT(r.review_id) as review_count
+      FROM products p
+      LEFT JOIN reviews r ON p.product_id = r.product_id
+      WHERE p.category_id = $1
+      GROUP BY p.product_id
+    `, [categoryId]);
     res.json(products.rows);
   } catch (error) {
     console.error('Products fetch error:', error);
@@ -244,7 +249,15 @@ app.get('/api/products/category/:categoryId', async (req, res) => {
 // Get featured products
 app.get('/api/products/featured', async (req, res) => {
   try {
-    const products = await pool.query('SELECT * FROM products WHERE is_featured = TRUE');
+    const products = await pool.query(`
+      SELECT p.*, 
+        COALESCE(ROUND(AVG(r.rating), 1), 0) as average_rating,
+        COUNT(r.review_id) as review_count
+      FROM products p
+      LEFT JOIN reviews r ON p.product_id = r.product_id
+      WHERE p.is_featured = TRUE
+      GROUP BY p.product_id
+    `);
     res.json(products.rows);
   } catch (error) {
     console.error('Featured products fetch error:', error);
@@ -256,10 +269,15 @@ app.get('/api/products/featured', async (req, res) => {
 app.get('/api/products/search', async (req, res) => {
   try {
     const searchTerm = `%${req.query.q}%`;
-    const products = await pool.query(
-      'SELECT * FROM products WHERE name LIKE $1 OR description LIKE $2',
-      [searchTerm, searchTerm]
-    );
+    const products = await pool.query(`
+      SELECT p.*, 
+        COALESCE(ROUND(AVG(r.rating), 1), 0) as average_rating,
+        COUNT(r.review_id) as review_count
+      FROM products p
+      LEFT JOIN reviews r ON p.product_id = r.product_id
+      WHERE p.name ILIKE $1 OR p.description ILIKE $2
+      GROUP BY p.product_id
+    `, [searchTerm, searchTerm]);
     res.json(products.rows);
   } catch (error) {
     console.error('Product search error:', error);
@@ -432,6 +450,155 @@ app.delete('/api/cart/items/:itemId', authenticateToken, async (req, res) => {
 
 // Place an order
 // Place an order
+// Add review routes
+app.post('/api/products/:productId/reviews', authenticateToken, async (req, res) => {
+  try {
+      const productId = req.params.productId;
+      const { rating, comment } = req.body;
+
+      // Validate rating
+      if (rating < 1 || rating > 5) {
+          return res.status(400).json({ message: 'Rating must be between 1 and 5' });
+      }
+
+      // Check if user already reviewed this product
+      const existingReview = await pool.query(
+          'SELECT * FROM reviews WHERE product_id = $1 AND user_id = $2',
+          [productId, req.user.userId]
+      );
+
+      if (existingReview.rows.length > 0) {
+          return res.status(400).json({ message: 'You have already reviewed this product' });
+      }
+
+      // Create new review
+      const result = await pool.query(
+          'INSERT INTO reviews (product_id, user_id, rating, comment) VALUES ($1, $2, $3, $4) RETURNING *',
+          [productId, req.user.userId, rating, comment]
+      );
+
+      res.status(201).json(result.rows[0]);
+  } catch (error) {
+      console.error('Review creation error:', error);
+      res.status(500).json({ message: 'Server error creating review' });
+  }
+});
+
+// Get product reviews
+app.get('/api/products/:productId/reviews', async (req, res) => {
+  try {
+      const productId = req.params.productId;
+      
+      const reviews = await pool.query(`
+          SELECT r.*, u.name as user_name 
+          FROM reviews r
+          JOIN users u ON r.user_id = u.user_id
+          WHERE product_id = $1
+          ORDER BY created_at DESC
+      `, [productId]);
+
+      // Get helpful counts
+      for (let review of reviews.rows) {
+          const helpfulCount = await pool.query(
+              'SELECT COUNT(*) FROM review_helpful WHERE review_id = $1',
+              [review.review_id]
+          );
+          review.helpful_count = parseInt(helpfulCount.rows[0].count);
+      }
+
+      res.json(reviews.rows);
+  } catch (error) {
+      console.error('Error fetching reviews:', error);
+      res.status(500).json({ message: 'Server error fetching reviews' });
+  }
+});
+
+// Mark review as helpful
+app.post('/api/reviews/:reviewId/helpful', authenticateToken, async (req, res) => {
+  try {
+    const reviewId = req.params.reviewId;
+    
+    // Check if already marked helpful
+    const existing = await pool.query(
+      'SELECT * FROM review_helpful WHERE review_id = $1 AND user_id = $2',
+      [reviewId, req.user.userId]
+    );
+
+    if (existing.rows.length > 0) {
+      // Remove helpful mark if already exists
+      await pool.query(
+        'DELETE FROM review_helpful WHERE review_id = $1 AND user_id = $2',
+        [reviewId, req.user.userId]
+      );
+    } else {
+      // Add helpful mark
+      await pool.query(
+        'INSERT INTO review_helpful (review_id, user_id) VALUES ($1, $2)',
+        [reviewId, req.user.userId]
+      );
+    }
+
+    // Get updated helpful count
+    const helpfulCount = await pool.query(
+      'SELECT COUNT(*) FROM review_helpful WHERE review_id = $1',
+      [reviewId]
+    );
+
+    res.json({ 
+      helpfulCount: parseInt(helpfulCount.rows[0].count),
+      hasMarked: !existing.rows.length > 0
+    });
+  } catch (error) {
+    console.error('Helpful vote error:', error);
+    res.status(500).json({ message: 'Server error processing helpful vote' });
+  }
+});
+
+// Update product routes to include average rating
+app.get('/api/products/category/:categoryId', async (req, res) => {
+  try {
+      const categoryId = req.params.categoryId;
+      const products = await pool.query(`
+          SELECT p.*, 
+                 COALESCE(ROUND(AVG(r.rating)::numeric, 0) as average_rating,
+                 COUNT(r.review_id) as review_count
+          FROM products p
+          LEFT JOIN reviews r ON p.product_id = r.product_id
+          WHERE p.category_id = $1
+          GROUP BY p.product_id
+      `, [categoryId]);
+      res.json(products.rows);
+  } catch (error) {
+      console.error('Products fetch error:', error);
+      res.status(500).json({ message: 'Server error fetching products' });
+  }
+});
+
+app.get('/api/products/:productId', async (req, res) => {
+  try {
+      const productId = req.params.productId;
+      
+      const productResult = await pool.query(`
+          SELECT p.*, 
+                 COALESCE(ROUND(AVG(r.rating)::numeric, 1), 0) as average_rating,
+                 COUNT(r.review_id) as review_count
+          FROM products p
+          LEFT JOIN reviews r ON p.product_id = r.product_id
+          WHERE p.product_id = $1
+          GROUP BY p.product_id
+      `, [productId]);
+
+      if (productResult.rows.length === 0) {
+          return res.status(404).json({ message: 'Product not found' });
+      }
+
+      const product = productResult.rows[0];
+      res.json(product);
+  } catch (error) {
+      console.error('Product fetch error:', error);
+      res.status(500).json({ message: 'Server error fetching product' });
+  }
+});
 app.post('/api/orders', authenticateToken, async (req, res) => {
   try {
     const { addressId, paymentMethod } = req.body;

@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import ProductDetails from "./pages/ProductDetails";
 // import AddressForm from "./components/AddressForm";
 // import ProductCard from "./components/ProductCard";
 import Home from "./pages/Home";
@@ -91,6 +92,7 @@ function App() {
           <Route path="/tracking/:orderId" element={<DeliveryTracking />} />
           <Route path="/admin" element={<AdminPanel />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/products/:productId" element={<ProductDetails />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

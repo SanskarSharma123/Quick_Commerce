@@ -17,49 +17,23 @@ const Products = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Check if we have a category in URL params
         const queryParams = new URLSearchParams(location.search);
         const categoryId = queryParams.get("category");
         const searchParam = queryParams.get("search");
         
-        if (searchParam) {
-          setSearchTerm(searchParam);
-        }
+        if (searchParam) setSearchTerm(searchParam);
 
         // Fetch categories
-        const categoriesResponse = await fetch(`${apiUrl}/categories`);
-        if (!categoriesResponse.ok) {
-          throw new Error("Failed to fetch categories");
-        }
-        const categoriesData = await categoriesResponse.json();
+        const [categoriesRes, productsRes] = await Promise.all([
+          fetch(`${apiUrl}/categories`),
+          fetchProducts(categoryId, searchParam)
+        ]);
+
+        const categoriesData = await categoriesRes.json();
+        const productsData = await productsRes.json();
+
         setCategories(categoriesData);
-
-        // Fetch products based on category or all products
-        let productsUrl = `${apiUrl}/products/featured`;
-        if (categoryId) {
-          productsUrl = `${apiUrl}/products/category/${categoryId}`;
-          setSelectedCategory(parseInt(categoryId));
-        } else if (searchParam) {
-          productsUrl = `${apiUrl}/products/search?q=${encodeURIComponent(searchParam)}`;
-        }
-
-        const productsResponse = await fetch(productsUrl);
-        if (!productsResponse.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        const productsData = await productsResponse.json();
-        console.log("Product data:", productsData);
-        
-        // Process product image URLs if needed
-        const processedProducts = productsData.map(product => {
-          return {
-            ...product,
-            // Ensure image_url is properly formatted
-            image_url: processImageUrl(product.image_url, apiUrl)
-          };
-        });
-     
-        setProducts(processedProducts);
+        processProducts(productsData);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError(error.message);
@@ -71,33 +45,34 @@ const Products = () => {
     fetchData();
   }, [location.search]);
 
-  // Function to process image URLs based on their format
-  const processImageUrl = (url, baseApiUrl) => {
+  const fetchProducts = async (categoryId, searchParam) => {
+    let url = `${apiUrl}/products/featured`;
+    if (categoryId) url = `${apiUrl}/products/category/${categoryId}`;
+    if (searchParam) url = `${apiUrl}/products/search?q=${encodeURIComponent(searchParam)}`;
+    return fetch(url);
+  };
+
+  const processProducts = (productsData) => {
+    const processed = productsData.map(product => ({
+      ...product,
+      image_url: processImageUrl(product.image_url),
+      average_rating: product.average_rating || 0,
+      review_count: product.review_count || 0
+    }));
+    setProducts(processed);
+  };
+
+  const processImageUrl = (url) => {
     if (!url) return "/images/placeholder-product.jpg";
-    
-    // If it's already an absolute URL
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url;
-    }
-    
-    // If it references an API endpoint for images
-    if (url.startsWith('/api/')) {
-      return `${baseApiUrl}${url}`;
-    }
-    
-    // If it's a relative path without leading slash
-    if (!url.startsWith('/')) {
-      return `/${url}`;
-    }
-    
+    if (url.startsWith('http')) return url;
+    if (url.startsWith('/api/')) return `${apiUrl}${url}`;
+    if (!url.startsWith('/')) return `/${url}`;
     return url;
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchTerm)}`);
-    }
+    if (searchTerm.trim()) navigate(`/products?search=${encodeURIComponent(searchTerm)}`);
   };
 
   const handleCategoryChange = (categoryId) => {
@@ -105,13 +80,8 @@ const Products = () => {
     navigate(`/products?category=${categoryId}`);
   };
 
-  if (loading) {
-    return <div className="loading">Loading products...</div>;
-  }
-
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
+  if (loading) return <div className="loading">Loading products...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="products-container">
@@ -164,7 +134,10 @@ const Products = () => {
         <div className="products-grid">
           {products.length > 0 ? (
             products.map((product) => (
-              <ProductCard key={product.product_id} product={product} />
+              <ProductCard 
+                key={product.product_id} 
+                product={product}
+              />
             ))
           ) : (
             <div className="no-products">
