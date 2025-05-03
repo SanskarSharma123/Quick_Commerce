@@ -1,0 +1,234 @@
+.admin-container {
+    display: flex;
+    min-height: calc(100vh - 60px);
+  }
+  
+  .admin-sidebar {
+    width: 250px;
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+  }
+  
+  .admin-sidebar h2 {
+    padding: 0 20px 20px;
+    font-size: 20px;
+    border-bottom: 1px solid #495057;
+  }
+  
+  .admin-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .admin-sidebar li {
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .admin-sidebar li:hover {
+    background-color: #495057;
+  }
+  
+  .admin-sidebar li.active {
+    background-color: #4CAF50;
+  }
+  
+  .admin-content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f8f9fa;
+  }
+  
+  .products-admin, .orders-admin, .users-admin {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .products-admin h2, .orders-admin h2, .users-admin h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .add-product {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  tr:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .edit-btn, .delete-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .edit-btn {
+    background-color: #2196F3;
+    color: white;
+    margin-right: 5px;
+  }
+  
+  .delete-btn {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  select {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+  }
+  
+  .error {
+    text-align: center;
+    padding: 40px;
+    color: #f44336;
+  }
+  /* Dark mode styles */
+.dark-mode .admin-container,
+.dark-mode .cart-container,
+.dark-mode .dashboard-container,
+.dark-mode .tracking-container,
+.dark-mode .orders-container,
+.dark-mode .profile-container,
+.dark-mode .products-container {
+  background-color: var(--bg-color);
+}
+
+.dark-mode .admin-sidebar {
+  background-color: #2a2a2a;
+}
+
+.dark-mode .products-admin,
+.dark-mode .orders-admin,
+.dark-mode .users-admin,
+.dark-mode .cart-item,
+.dark-mode .delivery-address,
+.dark-mode .payment-method,
+.dark-mode .order-summary,
+.dark-mode .order-card,
+.dark-mode .user-info,
+.dark-mode .addresses-section,
+.dark-mode .product-card,
+.dark-mode .auth-card,
+.dark-mode .confirmation-card,
+.dark-mode .not-found-content,
+.dark-mode .address-form-container {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode .item-details h3,
+.dark-mode .delivery-address h3,
+.dark-mode .payment-method h3,
+.dark-mode .order-summary h3,
+.dark-mode .product-info h3,
+.dark-mode .order-header h3,
+.dark-mode .info-item span {
+  color: var(--text-color);
+}
+
+.dark-mode .item-details p,
+.dark-mode .address-card p,
+.dark-mode .summary-row,
+.dark-mode .order-date,
+.dark-mode .product-unit,
+.dark-mode .no-orders,
+.dark-mode .no-products,
+.dark-mode .no-addresses {
+  color: #b0b0b0;
+}
+
+.dark-mode .address-card {
+  border-color: var(--border-color);
+}
+
+.dark-mode .add-address {
+  background-color: #2a2a2a;
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.dark-mode .place-order,
+.dark-mode .add-to-cart,
+.dark-mode .auth-button,
+.dark-mode .home-link,
+.dark-mode .track-order,
+.dark-mode .shop-now-button {
+  background-color: var(--primary-color);
+}
+
+.dark-mode .continue-shopping {
+  background-color: var(--card-bg);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.dark-mode .status-timeline::before {
+  background-color: #444;
+}
+
+.dark-mode .step-icon {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark-mode .status-step.active .step-icon {
+  background-color: var(--primary-color);
+}
+
+.dark-mode .update-item {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.dark-mode .loading {
+  color: #b0b0b0;
+}

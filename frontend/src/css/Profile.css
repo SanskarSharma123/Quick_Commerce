@@ -1,0 +1,253 @@
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .profile-header {
+    margin-bottom: 30px;
+  }
+  
+  .profile-header h1 {
+    font-size: 28px;
+    color: #333;
+  }
+  
+  .profile-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+  }
+  
+  .user-info, .addresses-section {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .user-info h2, .addresses-section h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #333;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .info-item {
+    margin-bottom: 15px;
+  }
+  
+  .info-item label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  
+  .info-item span {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .section-header button {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .no-addresses {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+  }
+  
+  .addresses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .address-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    position: relative;
+  }
+  
+  .default-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  
+  .address-card p {
+    margin: 5px 0;
+    color: #666;
+  }
+  
+  .address-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .edit-btn, .delete-btn {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .edit-btn {
+    background-color: #2196F3;
+    color: white;
+  }
+  
+  .delete-btn {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+  }
+  
+  .error {
+    text-align: center;
+    padding: 40px;
+    color: #f44336;
+  }
+  
+  @media (max-width: 768px) {
+    .profile-content {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Dark mode styles */
+.dark-mode .admin-container,
+.dark-mode .cart-container,
+.dark-mode .dashboard-container,
+.dark-mode .tracking-container,
+.dark-mode .orders-container,
+.dark-mode .profile-container,
+.dark-mode .products-container {
+  background-color: var(--bg-color);
+}
+
+.dark-mode .admin-sidebar {
+  background-color: #2a2a2a;
+}
+
+.dark-mode .products-admin,
+.dark-mode .orders-admin,
+.dark-mode .users-admin,
+.dark-mode .cart-item,
+.dark-mode .delivery-address,
+.dark-mode .payment-method,
+.dark-mode .order-summary,
+.dark-mode .order-card,
+.dark-mode .user-info,
+.dark-mode .addresses-section,
+.dark-mode .product-card,
+.dark-mode .auth-card,
+.dark-mode .confirmation-card,
+.dark-mode .not-found-content,
+.dark-mode .address-form-container {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode .item-details h3,
+.dark-mode .delivery-address h3,
+.dark-mode .payment-method h3,
+.dark-mode .order-summary h3,
+.dark-mode .product-info h3,
+.dark-mode .order-header h3,
+.dark-mode .info-item span {
+  color: var(--text-color);
+}
+
+.dark-mode .item-details p,
+.dark-mode .address-card p,
+.dark-mode .summary-row,
+.dark-mode .order-date,
+.dark-mode .product-unit,
+.dark-mode .no-orders,
+.dark-mode .no-products,
+.dark-mode .no-addresses {
+  color: #b0b0b0;
+}
+
+.dark-mode .address-card {
+  border-color: var(--border-color);
+}
+
+.dark-mode .add-address {
+  background-color: #2a2a2a;
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.dark-mode .place-order,
+.dark-mode .add-to-cart,
+.dark-mode .auth-button,
+.dark-mode .home-link,
+.dark-mode .track-order,
+.dark-mode .shop-now-button {
+  background-color: var(--primary-color);
+}
+
+.dark-mode .continue-shopping {
+  background-color: var(--card-bg);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.dark-mode .status-timeline::before {
+  background-color: #444;
+}
+
+.dark-mode .step-icon {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark-mode .status-step.active .step-icon {
+  background-color: var(--primary-color);
+}
+
+.dark-mode .update-item {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.dark-mode .loading {
+  color: #b0b0b0;
+}

@@ -1,0 +1,211 @@
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    padding: 20px;
+  }
+  
+  .auth-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .auth-header {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  
+  .auth-logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+  }
+  
+  .auth-header h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .auth-header p {
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .form-group label {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .form-group input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  
+  .auth-button {
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .auth-button:hover {
+    background-color: #45a049;
+  }
+  
+  .auth-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .auth-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .auth-footer a {
+    color: #4CAF50;
+    text-decoration: none;
+  }
+  
+  .error-message {
+    color: #f44336;
+    background-color: #ffebee;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+
+  /* Dark mode styles */
+.dark-mode .admin-container,
+.dark-mode .cart-container,
+.dark-mode .dashboard-container,
+.dark-mode .tracking-container,
+.dark-mode .orders-container,
+.dark-mode .profile-container,
+.dark-mode .products-container {
+  background-color: var(--bg-color);
+}
+
+.dark-mode .admin-sidebar {
+  background-color: #2a2a2a;
+}
+
+.dark-mode .products-admin,
+.dark-mode .orders-admin,
+.dark-mode .users-admin,
+.dark-mode .cart-item,
+.dark-mode .delivery-address,
+.dark-mode .payment-method,
+.dark-mode .order-summary,
+.dark-mode .order-card,
+.dark-mode .user-info,
+.dark-mode .addresses-section,
+.dark-mode .product-card,
+.dark-mode .auth-card,
+.dark-mode .confirmation-card,
+.dark-mode .not-found-content,
+.dark-mode .address-form-container {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode .item-details h3,
+.dark-mode .delivery-address h3,
+.dark-mode .payment-method h3,
+.dark-mode .order-summary h3,
+.dark-mode .product-info h3,
+.dark-mode .order-header h3,
+.dark-mode .info-item span {
+  color: var(--text-color);
+}
+
+.dark-mode .item-details p,
+.dark-mode .address-card p,
+.dark-mode .summary-row,
+.dark-mode .order-date,
+.dark-mode .product-unit,
+.dark-mode .no-orders,
+.dark-mode .no-products,
+.dark-mode .no-addresses {
+  color: #b0b0b0;
+}
+
+.dark-mode .address-card {
+  border-color: var(--border-color);
+}
+
+.dark-mode .add-address {
+  background-color: #2a2a2a;
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.dark-mode .place-order,
+.dark-mode .add-to-cart,
+.dark-mode .auth-button,
+.dark-mode .home-link,
+.dark-mode .track-order,
+.dark-mode .shop-now-button {
+  background-color: var(--primary-color);
+}
+
+.dark-mode .continue-shopping {
+  background-color: var(--card-bg);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.dark-mode .status-timeline::before {
+  background-color: #444;
+}
+
+.dark-mode .step-icon {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark-mode .status-step.active .step-icon {
+  background-color: var(--primary-color);
+}
+
+.dark-mode .update-item {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.dark-mode .loading {
+  color: #b0b0b0;
+}

@@ -1,0 +1,416 @@
+.tracking-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.tracking-container h1 {
+  font-size: 24px;
+  margin-bottom: 30px;
+  color: #333;
+  text-align: center;
+}
+
+/* Map container styling */
+.map-container {
+  margin-bottom: 30px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.delivery-map {
+  width: 100%;
+  height: 300px;
+  z-index: 1;
+}
+
+.status-container {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.status-timeline {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.status-timeline::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #ddd;
+  z-index: 1;
+}
+
+.status-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.step-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ddd;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.status-step.active .step-icon {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.step-label {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+
+.status-step.active .step-label {
+  color: #333;
+  font-weight: bold;
+}
+
+.current-status {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.current-status h2 {
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.current-status p {
+  color: #666;
+}
+
+.status-pending {
+  color: #ff9800;
+}
+
+.status-confirmed {
+  color: #2196F3;
+}
+
+.status-processing {
+  color: #4CAF50;
+}
+
+.status-out_for_delivery {
+  color: #673ab7;
+}
+
+.status-delivered {
+  color: #4CAF50;
+}
+
+/* Live delivery ETA section */
+.delivery-eta {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.eta-info h3 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.eta-info p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.delivery-person-info {
+  display: flex;
+  align-items: center;
+}
+
+.delivery-person-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #673ab7;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.delivery-person-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.delivery-name {
+  margin: 0;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.call-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 15px;
+  text-decoration: none;
+  font-size: 12px;
+  margin-top: 5px;
+  display: inline-block;
+  text-align: center;
+}
+
+.tracking-details h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #333;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.updates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.update-item {
+  display: flex;
+  gap: 15px;
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.update-time {
+  font-size: 14px;
+  color: #666;
+  min-width: 60px;
+}
+
+.update-content {
+  flex-grow: 1;
+}
+
+.update-status {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+}
+
+.update-location {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.delivery-person {
+  font-size: 14px;
+  color: #666;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.error {
+  text-align: center;
+  padding: 40px;
+  color: #f44336;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 600px) {
+  .delivery-eta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .delivery-person-info {
+    margin-top: 15px;
+  }
+  
+  .status-timeline {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .status-timeline::before {
+    top: 0;
+    bottom: 0;
+    left: 15px;
+    right: auto;
+    width: 2px;
+    height: 100%;
+  }
+  
+  .status-step {
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .step-icon {
+    margin-right: 15px;
+    margin-bottom: 0;
+  }
+  
+  .step-label {
+    text-align: left;
+  }
+}
+
+/* Dark mode styles */
+.dark-mode .admin-container,
+.dark-mode .cart-container,
+.dark-mode .dashboard-container,
+.dark-mode .tracking-container,
+.dark-mode .orders-container,
+.dark-mode .profile-container,
+.dark-mode .products-container {
+  background-color: var(--bg-color);
+}
+
+.dark-mode .admin-sidebar {
+  background-color: #2a2a2a;
+}
+
+.dark-mode .products-admin,
+.dark-mode .orders-admin,
+.dark-mode .users-admin,
+.dark-mode .cart-item,
+.dark-mode .delivery-address,
+.dark-mode .payment-method,
+.dark-mode .order-summary,
+.dark-mode .order-card,
+.dark-mode .user-info,
+.dark-mode .addresses-section,
+.dark-mode .product-card,
+.dark-mode .auth-card,
+.dark-mode .confirmation-card,
+.dark-mode .not-found-content,
+.dark-mode .address-form-container,
+.dark-mode .map-container,
+.dark-mode .status-container,
+.dark-mode .delivery-eta,
+.dark-mode .update-item {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode .item-details h3,
+.dark-mode .delivery-address h3,
+.dark-mode .payment-method h3,
+.dark-mode .order-summary h3,
+.dark-mode .product-info h3,
+.dark-mode .order-header h3,
+.dark-mode .info-item span,
+.dark-mode .delivery-name,
+.dark-mode .eta-info h3,
+.dark-mode .update-status {
+  color: var(--text-color);
+}
+
+.dark-mode .item-details p,
+.dark-mode .address-card p,
+.dark-mode .summary-row,
+.dark-mode .order-date,
+.dark-mode .product-unit,
+.dark-mode .no-orders,
+.dark-mode .no-products,
+.dark-mode .no-addresses,
+.dark-mode .eta-info p,
+.dark-mode .update-location,
+.dark-mode .update-time,
+.dark-mode .delivery-person,
+.dark-mode .current-status p {
+  color: #b0b0b0;
+}
+
+.dark-mode .address-card {
+  border-color: var(--border-color);
+}
+
+.dark-mode .add-address {
+  background-color: #2a2a2a;
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.dark-mode .place-order,
+.dark-mode .add-to-cart,
+.dark-mode .auth-button,
+.dark-mode .home-link,
+.dark-mode .track-order,
+.dark-mode .shop-now-button,
+.dark-mode .call-btn {
+  background-color: var(--primary-color);
+}
+
+.dark-mode .continue-shopping {
+  background-color: var(--card-bg);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.dark-mode .status-timeline::before {
+  background-color: #444;
+}
+
+.dark-mode .step-icon {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark-mode .status-step.active .step-icon {
+  background-color: var(--primary-color);
+}
+
+.dark-mode .update-item {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.dark-mode .loading {
+  color: #b0b0b0;
+}

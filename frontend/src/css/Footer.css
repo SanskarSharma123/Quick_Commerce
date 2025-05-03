@@ -1,0 +1,110 @@
+/* Footer.css */
+.footer {
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  padding: 3rem 0 1rem;
+  margin-top: 2rem;
+  width: 100%;
+  transition: background-color 0.3s, color 0.3s;
+}
+  
+  .footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  
+  .footer-section {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 2rem;
+    padding-right: 1rem;
+  }
+  
+  .footer-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #ffffff;
+  }
+  
+  .footer-section h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #ffffff;
+  }
+  
+  .footer-section p {
+    margin-bottom: 1rem;
+    color: #cccccc;
+  }
+  
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer-section ul li {
+    margin-bottom: 0.75rem;
+  }
+  
+  .footer-section ul li a {
+    color: #cccccc;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .footer-section ul li a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+  
+  .social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .social-links a {
+    color: #cccccc;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .social-links a:hover {
+    color: #ffffff;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    margin-top: 1rem;
+    border-top: 1px solid #333;
+    color: #999999;
+    font-size: 0.9rem;
+  }
+  .footer-section ul li a {
+    color: var(--footer-text);
+    opacity: 0.8;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .footer-section ul li a:hover {
+    opacity: 1;
+    text-decoration: underline;
+  }
+  /* Responsive adjustments */
+  @media screen and (max-width: 768px) {
+    .footer-container {
+      flex-direction: column;
+    }
+    
+    .footer-section {
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+  }
