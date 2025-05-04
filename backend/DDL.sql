@@ -151,8 +151,8 @@ CREATE TABLE IF NOT EXISTS store_locations (
 
 -- Create indexes for faster queries (with IF NOT EXISTS)
 -- Add latitude and longitude to addresses table
-ALTER TABLE addresses ADD COLUMN latitude DECIMAL(10, 8);
-ALTER TABLE addresses ADD COLUMN longitude DECIMAL(11, 8);
+-- ALTER TABLE addresses ADD COLUMN latitude DECIMAL(10, 8);
+-- ALTER TABLE addresses ADD COLUMN longitude DECIMAL(11, 8);
 
 ALTER TABLE delivery_locations ALTER COLUMN personnel_id DROP NOT NULL;
 

@@ -313,10 +313,10 @@ INSERT INTO products (name, description, price, discount_price, category_id, ima
 ('Hawkins Cooker Gasket', 'Pressure cooker rubber gasket', 120.00, 110.00, 15, '/images/products/gasket.jpg', 80, 'piece', TRUE);
 
 -- Insert delivery personnel
-INSERT INTO delivery_personnel (name, phone, email, password, is_available, current_location) VALUES
-('Raj Kumar', '9876543210', 'raj@quickcommerce.com', '$2b$10$LKg1cUpCgqTqIEFyZP8e9eR0MRGTLTfXe1VUY5DM6KTbYMzzw8Icu', TRUE, 'Bangalore, Indiranagar'),
-('Priya Singh', '8765432109', 'priya@quickcommerce.com', '$2b$10$LKg1cUpCgqTqIEFyZP8e9eR0MRGTLTfXe1VUY5DM6KTbYMzzw8Icu', TRUE, 'Bangalore, Koramangala'),
-('Amit Patel', '7654321098', 'amit@quickcommerce.com', '$2b$10$LKg1cUpCgqTqIEFyZP8e9eR0MRGTLTfXe1VUY5DM6KTbYMzzw8Icu', FALSE, 'Bangalore, Electronic City');
+-- INSERT INTO delivery_personnel (name, phone, email, password, is_available, current_location) VALUES
+-- ('Raj Kumar', '9876543210', 'raj@quickcommerce.com', '$2b$10$LKg1cUpCgqTqIEFyZP8e9eR0MRGTLTfXe1VUY5DM6KTbYMzzw8Icu', TRUE, 'Bangalore, Indiranagar'),
+-- ('Priya Singh', '8765432109', 'priya@quickcommerce.com', '$2b$10$LKg1cUpCgqTqIEFyZP8e9eR0MRGTLTfXe1VUY5DM6KTbYMzzw8Icu', TRUE, 'Bangalore, Koramangala'),
+-- ('Amit Patel', '7654321098', 'amit@quickcommerce.com', '$2b$10$LKg1cUpCgqTqIEFyZP8e9eR0MRGTLTfXe1VUY5DM6KTbYMzzw8Icu', FALSE, 'Bangalore, Electronic City');
 
 -- Create sample orders
 INSERT INTO orders (user_id, address_id, total_amount, delivery_fee, status, payment_method, payment_status, estimated_delivery_time) VALUES
@@ -342,15 +342,15 @@ INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
 (3, 15, 1, 200.00);
 
 -- Add order tracking data
-INSERT INTO order_tracking (order_id, personnel_id, status, location, timestamp) VALUES
-(1, 1, 'confirmed', 'Warehouse', NOW() - INTERVAL '2 days'),
-(1, 1, 'processing', 'Warehouse', NOW() - INTERVAL '2 days'),
-(1, 1, 'out_for_delivery', 'En route to customer', NOW() - INTERVAL '2 days'),
-(1, 1, 'delivered', 'Customer address', NOW() - INTERVAL '2 days'),
-(2, 2, 'confirmed', 'Warehouse', NOW() - INTERVAL '30 minutes'),
-(2, 2, 'processing', 'Warehouse', NOW() - INTERVAL '20 minutes'),
-(2, 2, 'out_for_delivery', 'En route to customer', NOW()),
-(3, NULL, 'pending', 'Order received', NOW());
+-- INSERT INTO order_tracking (order_id, personnel_id, status, location, timestamp) VALUES
+-- (1, 1, 'confirmed', 'Warehouse', NOW() - INTERVAL '2 days'),
+-- (1, 1, 'processing', 'Warehouse', NOW() - INTERVAL '2 days'),
+-- (1, 1, 'out_for_delivery', 'En route to customer', NOW() - INTERVAL '2 days'),
+-- (1, 1, 'delivered', 'Customer address', NOW() - INTERVAL '2 days'),
+-- (2, 2, 'confirmed', 'Warehouse', NOW() - INTERVAL '30 minutes'),
+-- (2, 2, 'processing', 'Warehouse', NOW() - INTERVAL '20 minutes'),
+-- (2, 2, 'out_for_delivery', 'En route to customer', NOW()),
+-- (3, NULL, 'pending', 'Order received', NOW());
 
 -- Create sample cart for users
 INSERT INTO cart (user_id) VALUES (2), (3), (4);
