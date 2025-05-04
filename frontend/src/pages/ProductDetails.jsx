@@ -579,6 +579,39 @@ const ProductDetails = () => {
         const numPrice = typeof price === 'string' ? parseFloat(price) : price;
         return isNaN(numPrice) ? '0.00' : numPrice.toFixed(2);
     };
+    const fetchProduct = async () => {
+      try {
+          const response = await fetch(`${apiUrl}/products/${productId}`);
+          if (!response.ok) throw new Error("Failed to fetch product");
+          const data = await response.json();
+          setProduct(data);
+      } catch (error) {
+          setError(error.message);
+      }
+  };
+  const handleHelpful = async (reviewId) => {
+    try {
+      const response = await fetch(`${apiUrl}/api/reviews/${reviewId}/helpful`, {
+        method: 'POST',
+        credentials: 'include' // Required for cookies
+      });
+      
+      if (!response.ok) throw new Error('Failed to update helpful count');
+      
+      const data = await response.json();
+      
+      // Update the reviews state with new helpful count
+      setReviews(reviews.map(review => 
+        review.review_id === reviewId 
+          ? { ...review, helpful_count: data.helpfulCount } 
+          : review
+      ));
+    } catch (error) {
+      console.error('Error marking review helpful:', error);
+      // Optionally show error to user
+    }
+  };
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -614,6 +647,7 @@ const ProductDetails = () => {
 
     const handleNewReview = (newReview) => {
         setReviews([newReview, ...reviews]);
+        fetchProduct();
     };
 
     if (loading) return <div className="loading">Loading product...</div>;
@@ -675,9 +709,12 @@ const ProductDetails = () => {
                             </div>
                             <p>{review.comment}</p>
                             <div className="helpful-section">
-                                <button className="helpful-button">
-                                    Helpful ({review.helpful_count})
-                                </button>
+                            <button 
+                              className="helpful-button"
+                              onClick={() => handleHelpful(review.review_id)}
+                            >
+                              Helpful ({review.helpful_count})
+                            </button>
                             </div>
                         </div>
                     ))}

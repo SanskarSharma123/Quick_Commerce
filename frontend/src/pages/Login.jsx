@@ -45,8 +45,10 @@ const Login = ({ setIsLoggedIn, setUser }) => {
 
       // Redirect based on user role
       if (data.user.isAdmin) {
+        localStorage.setItem("user", JSON.stringify(data.user));
         navigate("/admin");
       } else {
+        localStorage.setItem("user", JSON.stringify(data.user));
         navigate("/dashboard");
       }
     } catch (error) {

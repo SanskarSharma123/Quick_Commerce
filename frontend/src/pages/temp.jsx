@@ -78,18 +78,14 @@ const DeliveryTracking = () => {
     if (!storeLocation || !deliveryLocation) {
       if (!order) return; // Exit if order is not available
       
-      storeLocation = order.storeLocation || {
-        lat: 12.9716,
-        lng: 77.5946,
-        name: "Main Store",
-        address: "123 MG Road, Bangalore"
-      };
+      storeLocation = order.storeLocation;
+      deliveryLocation = order.deliveryLocation;
       
-      deliveryLocation = order.deliveryLocation || {
-        lat: 12.9716,
-        lng: 77.5919, // Slightly different from store to ensure visible route
-        address: "Delivery address not available"
-      };
+      // Additional safety check
+      if (!storeLocation || !deliveryLocation) {
+        console.error("Missing location data in order:", order);
+        return;
+      }
     }
     
     // Remove existing route if any
@@ -262,18 +258,14 @@ const DeliveryTracking = () => {
   const updateRoute = useCallback((newLocation) => {
     if (!mapRef.current || !routeLayerRef.current || !order) return;
     
-    const storeLocation = order.storeLocation || {
-      lat: 12.9716,
-      lng: 77.5946,
-      name: "Main Store",
-      address: "123 MG Road, Bangalore"
-    };
+    const storeLocation = order.storeLocation;
+    const deliveryLocation = order.deliveryLocation;
     
-    const deliveryLocation = order.deliveryLocation || {
-      lat: 12.9716,
-      lng: 77.5919,
-      address: "Delivery address not available"
-    };
+    // Check if we have valid locations
+    if (!storeLocation || !deliveryLocation) {
+      console.error("Missing location data in order:", order);
+      return;
+    }
     
     if (routeLayerRef.current.setWaypoints) {
       // Using Routing Machine - update waypoints
@@ -299,6 +291,7 @@ const DeliveryTracking = () => {
         
         if (response.ok) {
           const data = await response.json();
+          console.log("Location update received:", data);
           
           // Update delivery person's location if changed
           if (data.currentDeliveryLocation && deliveryMarkerRef.current) {
@@ -312,16 +305,14 @@ const DeliveryTracking = () => {
             updateRoute(data.currentDeliveryLocation);
           }
           
-          // Update ETA if changed
-          if (data.deliveryEta !== order?.deliveryEta) {
-            setOrder(prev => ({ ...prev, deliveryEta: data.deliveryEta }));
-          }
+          // Update order state with new data
+          setOrder(data);
         }
       } catch (err) {
         console.error("Failed to update location:", err);
       }
     }, 30000); // 30 seconds
-  }, [orderId, order, updateRoute]);
+  }, [orderId, updateRoute]);
 
   // Load Leaflet resources
   useEffect(() => {
@@ -380,26 +371,53 @@ const DeliveryTracking = () => {
     };
   }, []);
 
+  // Define create bike icon function
+  const createBikeIcon = () => {
+    // Create a custom bike icon using SVG
+    return window.L.divIcon({
+      html: `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" fill="#00AA00">
+          <path d="M5,20.5A3.5,3.5 0 0,1 1.5,17A3.5,3.5 0 0,1 5,13.5A3.5,3.5 0 0,1 8.5,17A3.5,3.5 0 0,1 5,20.5M5,12A5,5 0 0,0 0,17A5,5 0 0,0 5,22A5,5 0 0,0 10,17A5,5 0 0,0 5,12M14.8,10H19V8.2H15.8L13.8,4.8C13.5,4.3 12.8,4 12,4C11.2,4 10.5,4.3 10.2,4.8L8,8H5V10H8.2L12.3,5H13.5L14.8,10M19,20.5A3.5,3.5 0 0,1 15.5,17A3.5,3.5 0 0,1 19,13.5A3.5,3.5 0 0,1 22.5,17A3.5,3.5 0 0,1 19,20.5M19,12A5,5 0 0,0 14,17A5,5 0 0,0 19,22A5,5 0 0,0 24,17A5,5 0 0,0 19,12M16,6H11.5L10.5,4H14A2,2 0 0,1 16,6Z"/>
+        </svg>
+      `,
+      className: '',
+      iconSize: [28, 28],
+      iconAnchor: [14, 14]
+    });
+  };
+
   // Define initializeMap with useCallback
   const initializeMap = useCallback(() => {
     if (!order) return; // Safety check to ensure order exists
     
-    // Get locations from order with fallback values
-    const storeLocation = order.storeLocation || {
-      lat: 12.9716,
-      lng: 77.5946,
-      name: "Main Store",
-      address: "123 MG Road, Bangalore"
-    };
-    console.log(order.deliveryLocation?.lat);
-    const deliveryLocation = order.deliveryLocation || {
-      lat: order.deliveryLocation?.lat || 12.9746, // Use from API or fallback
-      lng: order.deliveryLocation?.lng || 77.5946,
-      address: order.deliveryLocation?.address || "Delivery address"
-    };
+    // Get locations from order
+    const isValidCoordinate = (coord) => 
+    typeof coord === 'number' && !isNaN(coord) && Math.abs(coord) <= 90;
   
+    const storeLat = order.storeLocation.lat;
+    const storeLng = order.storeLocation.lng;
+    const deliveryLat = order.deliveryLocation.lat;
+    const deliveryLng = order.deliveryLocation.lng;
+    if (!isValidCoordinate(storeLat) || !isValidCoordinate(storeLng) ||
+      !isValidCoordinate(deliveryLat) || !isValidCoordinate(deliveryLng)) {
+        console.log(deliveryLng);
+    console.error('Invalid coordinates:', order);
+    setError('Invalid map coordinates - please contact support');
+    return;
+  }  
+    const storeLocation = order.storeLocation;
+    const deliveryLocation = order.deliveryLocation;
     const currentDeliveryLocation = order.currentDeliveryLocation;
+    
+    // Safety check for valid locations
+    if (!storeLocation || !deliveryLocation) {
+      console.error("Missing location data in order:", order);
+      setError("Error loading map: Missing location data");
+      return;
+    }
   
+    console.log("Initializing map with delivery location:", deliveryLocation);
+    
     // Create map instance
     const mapInstance = window.L.map('delivery-map').setView(
       [(storeLocation.lat + deliveryLocation.lat)/2, (storeLocation.lng + deliveryLocation.lng)/2], 
@@ -423,7 +441,7 @@ const DeliveryTracking = () => {
     
     window.L.marker([storeLocation.lat, storeLocation.lng], {icon: storeIcon})
       .addTo(mapInstance)
-      .bindPopup(`<b>${storeLocation.name}</b><br>${storeLocation.address}`);
+      .bindPopup(`<b>${storeLocation.name || "Store"}</b><br>${storeLocation.address || ""}`);
   
     // Add delivery marker
     const deliveryIcon = window.L.icon({
@@ -434,28 +452,41 @@ const DeliveryTracking = () => {
     
     window.L.marker([deliveryLocation.lat, deliveryLocation.lng], {icon: deliveryIcon})
       .addTo(mapInstance)
-      .bindPopup(`<b>Delivery Address</b><br>${deliveryLocation.address}`);
+      .bindPopup(`<b>Delivery Address</b><br>${deliveryLocation.address || ""}`);
   
-    // If out for delivery, show delivery person's current location
-    if (order.status === "out_for_delivery" && currentDeliveryLocation) {
-      const deliveryPersonIcon = window.L.icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-        shadowSize: [41, 41]
-      });
+    // If out for delivery or delivered, show delivery person's location
+    if ((order.status === "out_for_delivery" || order.status === "delivered") && 
+        (currentDeliveryLocation || order.status === "delivered")) {
+      
+      // For delivered orders, set current location to delivery location
+      const locationToUse = order.status === "delivered" 
+        ? deliveryLocation 
+        : currentDeliveryLocation;
+      
+      // Use bike icon for delivery person
+      const bikeIcon = createBikeIcon();
+
+      // Create popup content with delivery person info
+      const popupContent = order.delivery_person_name 
+        ? `<b>${order.delivery_person_name}</b>${order.delivery_person_phone ? `<br>Phone: ${order.delivery_person_phone}` : ''}`
+        : "Delivery Partner";
   
       const marker = window.L.marker(
-        [currentDeliveryLocation.lat, currentDeliveryLocation.lng],
-        {icon: deliveryPersonIcon}
+        [locationToUse.lat, locationToUse.lng],
+        {icon: bikeIcon}
       )
         .addTo(mapInstance)
-        .bindPopup(order.delivery_person_name || "Delivery Partner");
+        .bindPopup(popupContent);
       
       deliveryMarkerRef.current = marker;
-      drawRoute(currentDeliveryLocation, storeLocation, deliveryLocation);
+      
+      // For "out_for_delivery", draw route through current location
+      if (order.status === "out_for_delivery") {
+        drawRoute(locationToUse, storeLocation, deliveryLocation);
+      } else {
+        // For "delivered", just draw direct route from store to delivery
+        drawRoute(null, storeLocation, deliveryLocation);
+      }
     } else {
       // Just draw direct route from store to delivery location
       drawRoute(null, storeLocation, deliveryLocation);
@@ -467,8 +498,12 @@ const DeliveryTracking = () => {
       [deliveryLocation.lat, deliveryLocation.lng]
     ]);
     
-    if (order.status === "out_for_delivery" && currentDeliveryLocation) {
-      bounds.extend([currentDeliveryLocation.lat, currentDeliveryLocation.lng]);
+    if ((order.status === "out_for_delivery" || order.status === "delivered") && 
+        (currentDeliveryLocation || order.status === "delivered")) {
+      const locationToExtend = order.status === "delivered" 
+        ? deliveryLocation 
+        : currentDeliveryLocation;
+      bounds.extend([locationToExtend.lat, locationToExtend.lng]);
     }
     
     mapInstance.fitBounds(bounds, {padding: [30, 30]});
@@ -483,10 +518,18 @@ const DeliveryTracking = () => {
         });
         
         if (!response.ok) {
-          throw new Error("Failed to fetch order details");
+          const errorData = await response.json(); // Get error details
+          throw new Error(errorData.message || "Failed to fetch order details");
         }
-
+    
         const data = await response.json();
+        console.log("Received order data:", data);
+        
+        // Ensure we have valid location data
+        if (!data.deliveryLocation || !data.storeLocation) {
+          throw new Error("Missing location data in API response");
+        }
+        
         setOrder(data);
         
         // If order is out for delivery, start periodic updates
@@ -494,6 +537,7 @@ const DeliveryTracking = () => {
           startLocationUpdates();
         }
       } catch (error) {
+        console.error("Error fetching order:", error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -512,6 +556,7 @@ const DeliveryTracking = () => {
   // Initialize map when order data is loaded
   useEffect(() => {
     if (order && window.L && !mapRef.current) {
+      console.log("Map initialization triggered with order:", order);
       initializeMap();
     }
   }, [order, initializeMap]);
@@ -628,27 +673,27 @@ const DeliveryTracking = () => {
         </div>
       </div>
 
-      {order.status === "out_for_delivery" && (
+      {(order.status === "out_for_delivery" || order.status === "delivered") && order.delivery_person_name && (
         <div className="delivery-eta">
           <div className="eta-info">
-            <h3>Live Location</h3>
-            <p>Your delivery partner is {order.deliveryEta || "15"} minutes away</p>
+            <h3>{order.status === "delivered" ? "Delivered by" : "Live Location"}</h3>
+            {order.status === "out_for_delivery" && (
+              <p>Your delivery partner is {order.deliveryEta || "15"} minutes away</p>
+            )}
           </div>
-          {order.delivery_person_name && (
-            <div className="delivery-person-info">
-              <div className="delivery-person-avatar">
-                {order.delivery_person_name.charAt(0)}
-              </div>
-              <div className="delivery-person-details">
-                <p className="delivery-name">{order.delivery_person_name}</p>
-                {order.delivery_person_phone && (
-                  <a href={`tel:${order.delivery_person_phone}`} className="call-btn">
-                    Call
-                  </a>
-                )}
-              </div>
+          <div className="delivery-person-info">
+            <div className="delivery-person-avatar">
+              {order.delivery_person_name.charAt(0)}
             </div>
-          )}
+            <div className="delivery-person-details">
+              <p className="delivery-name">{order.delivery_person_name}</p>
+              {order.delivery_person_phone && (
+                <a href={`tel:${order.delivery_person_phone}`} className="call-btn">
+                  Call
+                </a>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
@@ -679,6 +724,33 @@ const DeliveryTracking = () => {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+<div className="order-details">
+        <h3>Order Details</h3>
+        <div className="order-items">
+          {order.items && order.items.map((item, index) => (
+            <div key={index} className="order-item">
+              <span className="item-quantity">{item.quantity}x</span>
+              <span className="item-name">{item.name}</span>
+              <span className="item-price">${item.price.toFixed(2)}</span>
+            </div>
+          ))}
+        </div>
+        <div className="order-summary">
+          <div className="summary-row">
+            <span>Subtotal:</span>
+            <span>${order.subtotal ? order.subtotal.toFixed(2) : '0.00'}</span>
+          </div>
+          <div className="summary-row">
+            <span>Delivery Fee:</span>
+            <span>${order.deliveryFee ? order.deliveryFee.toFixed(2) : '0.00'}</span>
+          </div>
+          <div className="summary-row total">
+            <span>Total:</span>
+            <span>${order.total ? order.total.toFixed(2) : '0.00'}</span>
+          </div>
         </div>
       </div>
     </div>

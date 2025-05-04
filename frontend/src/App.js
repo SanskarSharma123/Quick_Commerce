@@ -91,6 +91,7 @@ function App() {
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="/tracking/:orderId" element={<DeliveryTracking />} />
           <Route path="/admin" element={<AdminPanel />} />
+
           <Route path="/profile" element={<Profile />} />
           <Route path="/products/:productId" element={<ProductDetails />} />
           <Route path="/orders" element={<Orders />} />

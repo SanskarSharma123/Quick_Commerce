@@ -46,7 +46,7 @@ const Navbar = ({ isLoggedIn, user, handleLogout }) => {
                     My Orders
                   </Link>
                   {user?.isAdmin && (
-                    <Link to="/admin" className="dropdown-item">
+                    <Link to="/admin" className="nav-link">
                       Admin Panel
                     </Link>
                   )}
